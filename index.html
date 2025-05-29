@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Middle-earth</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -14,107 +12,71 @@
       height: 100%;
       overflow: hidden;
       font-family: 'UnifrakturCook', cursive;
-      color: #c0f0e8;
-      background-color: #000;
+      color: #ADFF2F;
     }
-
     canvas {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
-      z-index: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
     }
-
-    .content {
+    .container {
       position: relative;
       z-index: 1;
-      text-align: center;
-      padding-top: 10vh;
-    }
-
-    h1 {
-      font-size: 64px;
-      color: #84ffc9;
-      text-shadow: 0 0 10px #4bffef;
-    }
-
-    .menu {
-      margin-top: 50px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
     }
-
-    .menu button {
-      font-size: 24px;
-      padding: 10px 30px;
-      background-color: rgba(0,0,0,0.7);
-      border: 2px solid #5cffa4;
-      border-radius: 12px;
-      color: #fff;
+    h1 {
+      font-size: 3rem;
+      color: #ADFF2F;
+      text-shadow: 0 0 20px #8A2BE2;
+      margin-bottom: 40px;
+    }
+    .menu-button {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 2px solid #32CD32;
+      color: #ADFF2F;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1.2rem;
       cursor: pointer;
-      transition: 0.3s;
+      border-radius: 10px;
+      transition: 0.3s ease;
     }
-
-    .menu button:hover {
-      background-color: rgba(0,0,0,0.9);
-      transform: scale(1.05);
+    .menu-button:hover {
+      background-color: #4B0082;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <canvas id="bg"></canvas>
-  <div class="content">
-    <h1>Middle-earth</h1>
-    <div class="menu">
-      <button onclick="location.href='passwords.html'">Generate Passwords</button>
-      <button onclick="location.href='nicknames.html'">Fantasy Nicknames</button>
-      <button onclick="location.href='decorator.html'">Name Decorator</button>
-    </div>
+  <canvas></canvas>
+  <div class="container">
+    <h1>Welcome to Middle-earth</h1>
+    <a href="passwords.html"><button class="menu-button">Password Generator</button></a>
+    <a href="nicknames.html"><button class="menu-button">Fantasy Nickname Generator</button></a>
+    <a href="decorator.html"><button class="menu-button">Nickname Decorator</button></a>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webgl-fluid@0.3"></script>
   <script>
-    // Космический туман с реакцией на мышку
-    let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    let renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById("bg").replaceWith(renderer.domElement);
-    renderer.domElement.id = "bg";
-
-    let starsGeometry = new THREE.BufferGeometry();
-    let starCount = 2000;
-    let positions = [];
-    for (let i = 0; i < starCount; i++) {
-      positions.push((Math.random() - 0.5) * 2000);
-      positions.push((Math.random() - 0.5) * 2000);
-      positions.push((Math.random() - 0.5) * 2000);
-    }
-    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    let starsMaterial = new THREE.PointsMaterial({ color: 0x88ffff });
-    let stars = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(stars);
-
-    camera.position.z = 5;
-
-    let mouseX = 0, mouseY = 0;
-    document.addEventListener("mousemove", e => {
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    WebGLFluid(document.querySelector('canvas'), {
+      TRIGGER: 'hover',
+      IMMEDIATE: true,
+      SIM_RESOLUTION: 128,
+      DYE_RESOLUTION: 1024,
+      COLOR_PALETTE: ['#00ffcc', '#aa00ff', '#00ff66'],
+      BACK_COLOR: '#000000',
+      TRANSPARENT: false,
+      BLOOM: true,
+      SUNRAYS: true
     });
-
-    function animate() {
-      requestAnimationFrame(animate);
-      stars.rotation.x += 0.0005;
-      stars.rotation.y += 0.0005;
-      camera.position.x += (mouseX * 10 - camera.position.x) * 0.05;
-      camera.position.y += (mouseY * 10 - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
-      renderer.render(scene, camera);
-    }
-    animate();
   </script>
 </body>
 </html>
